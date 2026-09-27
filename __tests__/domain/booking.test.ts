@@ -47,6 +47,12 @@ describe('booking state machine', () => {
     expect(canTransition('provider_unavailable', 'pending')).toBe(true);
   });
 
+  test('stale pending bookings expire to provider_unavailable', () => {
+    // The auto-assign scheduler (pg_cron) moves bookings that waited > 45
+    // minutes without a provider to provider_unavailable.
+    expect(canTransition('pending', 'provider_unavailable')).toBe(true);
+  });
+
   test('OTP expiry allows regeneration via arrived', () => {
     expect(canTransition('awaiting_start_otp', 'arrived')).toBe(true);
     expect(canTransition('awaiting_start_otp', 'in_service')).toBe(true);

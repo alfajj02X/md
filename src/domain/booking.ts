@@ -37,7 +37,7 @@ export type BookingStatus =
  * - rescheduled -> pending carries the booking to its new slot.
  */
 const TRANSITIONS: Record<BookingStatus, readonly BookingStatus[]> = {
-  pending: ['offer', 'assigned', 'cancelled', 'rescheduled'],
+  pending: ['offer', 'assigned', 'cancelled', 'rescheduled', 'provider_unavailable'],
   offer: ['assigned', 'pending', 'cancelled', 'provider_unavailable'],
   assigned: ['on_the_way', 'cancelled', 'rescheduled'],
   on_the_way: ['arrived', 'cancelled'],

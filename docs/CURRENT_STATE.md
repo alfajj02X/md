@@ -27,11 +27,20 @@ every milestone._
 ## Environment (build machine)
 
 - Node 24.20.0, npm 10.9.4, Expo CLI 57.0.27. JDK 17 at `~/jdk17`.
-- Android SDK at `~/android-sdk`: platform-tools + android-36 platform
-  installed. build-tools download in progress (proxy blocks sdkmanager;
-  direct curl from dl.google.com is the workaround).
-- No KVM, no Docker, no emulator — native verification needs a device or
-  EAS.
+- Android SDK at `~/android-sdk`: platform-tools (adb 1.0.41), android-36
+  platform, build-tools 36.0.0 — all installed via direct curl (sdkmanager
+  can't handle the authenticated proxy; correct build-tools filename is
+  `build-tools_r36_linux.zip`, zip-internal dir `android-16`).
+- `expo-doctor`: 21/21 checks pass. `npx expo prebuild` succeeds (native
+  project generates; fixed missing `notification-icon.png` asset).
+- **Native APK compile is blocked in this sandbox:** Gradle 9.3.1 installs
+  and starts, but the Gradle daemon's NIO loopback IPC fails — the client
+  always gets "Could not dispatch a message to the daemon" (broken pipe),
+  even for `gradle help` in an empty dir. Python loopback TCP works, so this
+  is specific to Java's non-blocking SocketChannel path here (stale-registry
+  and IPv4-stack variants also tried). The APK must be built on the user's
+  machine (`npx expo run:android`) or via EAS cloud build.
+- No KVM, no Docker, no emulator — no on-device verification here.
 
 ## External credentials required (blockers)
 
